@@ -1,0 +1,334 @@
+
+/* Markdown 样式 */
+.markdown-content {
+  line-height: 1.8;
+  color: var(--base-content);
+}
+
+.markdown-content h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem 0;
+  color: var(--base-content);
+  border-bottom: 2px solid var(--base-300);
+  padding-bottom: 0.5rem;
+}
+
+.markdown-content h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 1.25rem 0 0.75rem 0;
+  color: var(--base-content);
+  border-bottom: 1px solid var(--base-300);
+  padding-bottom: 0.25rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 1rem 0 0.5rem 0;
+  color: var(--base-content);
+}
+
+.markdown-content h4 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.75rem 0 0.5rem 0;
+  color: var(--base-content);
+}
+
+.markdown-content h5 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0.5rem 0 0.25rem 0;
+  color: var(--base-content);
+}
+
+.markdown-content h6 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 0.5rem 0 0.25rem 0;
+  color: color-mix(in oklch, var(--base-content) 80%, transparent);
+}
+
+.markdown-content p {
+  margin: 0.5rem 0;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+.markdown-content strong {
+  font-weight: 600;
+  color: var(--base-content);
+}
+
+.markdown-content em {
+  font-style: italic;
+  color: var(--base-content);
+}
+
+.markdown-content code:not(.hljs) {
+  background-color: var(--base-300);
+  color: var(--base-content);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: "Fira Code", "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.875em;
+  border: 1px solid var(--base-300);
+}
+
+.markdown-content pre {
+  margin: 1rem 0;
+  overflow-x: auto;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.markdown-content pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.markdown-content pre::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+.markdown-content pre::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.markdown-content pre code {
+  font-family: "Fira Code", "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.markdown-content .markdown-code-block {
+  margin: 1.25rem 0;
+  border-radius: 0.75rem;
+  border: 1px solid var(--base-300);
+  background-color: var(--base-200);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.markdown-content .markdown-code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  background-color: rgba(148, 163, 184, 0.12);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: color-mix(in oklch, var(--base-content) 80%, transparent);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.markdown-content .markdown-code-block__language {
+  font-family: "Fira Code", "Monaco", "Consolas", "Courier New", monospace;
+}
+
+.markdown-content .markdown-code-block__copy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.markdown-content .markdown-code-block__copy:hover {
+  background-color: var(--color-neutral);
+  color: var(--color-neutral-content);
+}
+
+.markdown-content .markdown-code-block__copy-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+}
+
+.markdown-content .markdown-code-block__copy-icon .code-icon {
+  width: 100%;
+  height: 100%;
+}
+
+.markdown-content .markdown-code-block__copy-label {
+  display: none;
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+.markdown-content .markdown-code-block__copy.copied {
+  background-color: transparent;
+  color: var(--color-base-content);
+}
+
+.markdown-content .markdown-code-block__copy.copied .markdown-code-block__copy-icon {
+  display: none;
+}
+
+.markdown-content .markdown-code-block__copy.copied .markdown-code-block__copy-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.markdown-content .markdown-code-block pre {
+  margin: 0;
+  background: transparent;
+}
+
+.markdown-content .markdown-code-block pre code {
+  background: transparent;
+  display: block;
+  padding: 1.1rem 1.25rem;
+}
+
+pre.code-block {
+  margin: 0;
+  padding: 0;
+  font-family: "Fira Code", "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--base-content);
+  background-color: var(--base-200);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+pre.code-block code {
+  display: block;
+  font: inherit;
+  background: transparent;
+  color: inherit;
+}
+
+pre.code-block--compact {
+  font-size: 0.7rem;
+  border-radius: 0.65rem;
+}
+
+.markdown-content ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.markdown-content ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid var(--primary);
+  background-color: var(--base-200);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+  color: color-mix(in oklch, var(--base-content) 80%, transparent);
+  font-style: italic;
+}
+
+.markdown-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s;
+}
+
+.markdown-content a:hover {
+  text-decoration-color: var(--primary);
+}
+
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid var(--base-300);
+  margin: 2rem 0;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  border: 1px solid var(--base-300);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.markdown-content th,
+.markdown-content td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--base-300);
+}
+
+.markdown-content th {
+  background-color: var(--base-200);
+  font-weight: 600;
+  color: var(--base-content);
+}
+
+.markdown-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* 推理过程的特殊样式 - 浅色模式 */
+.reasoning-content {
+  line-height: 1.5;
+  color: color-mix(in oklch, var(--base-content) 60%, transparent);
+}
+
+.reasoning-content h1,
+.reasoning-content h2,
+.reasoning-content h3,
+.reasoning-content h4,
+.reasoning-content h5,
+.reasoning-content h6 {
+  color: color-mix(in oklch, var(--base-content) 70%, transparent);
+  border-color: color-mix(in oklch, var(--base-300) 80%, transparent);
+}
+
+.reasoning-content strong {
+  font-weight: 600;
+  color: color-mix(in oklch, var(--base-content) 65%, transparent);
+}
+
+.reasoning-content code:not(.hljs) {
+  background-color: color-mix(in oklch, var(--base-300) 50%, transparent);
+  color: color-mix(in oklch, var(--base-content) 70%, transparent);
+  border-color: color-mix(in oklch, var(--base-300) 60%, transparent);
+}
+
+.reasoning-content pre {
+  background-color: color-mix(in oklch, var(--base-200) 80%, transparent);
+  border-color: color-mix(in oklch, var(--base-300) 60%, transparent);
+}
+
+.reasoning-content pre code {
+  color: color-mix(in oklch, var(--base-content) 70%, transparent);
+}
+
+.reasoning-content blockquote {
+  border-left-color: color-mix(in oklch, var(--primary) 60%, transparent);
+  background-color: color-mix(in oklch, var(--base-200) 70%, transparent);
+  color: color-mix(in oklch, var(--base-content) 65%, transparent);
+}
