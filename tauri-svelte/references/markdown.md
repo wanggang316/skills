@@ -20,7 +20,8 @@ Read `package.json`, then use the Edit tool to add the following entries to the 
 "marked": "^17.0.1",
 "marked-highlight": "^2.2.3",
 "@tauri-apps/plugin-opener": "^2.5.3",
-"@tauri-apps/plugin-clipboard-manager": "^2.3.2"
+"@tauri-apps/plugin-clipboard-manager": "^2.3.2",
+"katex": "^0.16.22",
 ```
 
 Preserve existing entries. Do not duplicate keys that already exist.
@@ -86,7 +87,36 @@ For each file (`browser.ts` and `tauri.ts`), follow this logic:
 
   Also ensure that any required imports (`@tauri-apps/plugin-opener`, etc.) are present at the top of the merged file.
 
-### Step 7: Add Clipboard Permissions
+### Step 7: Add Rust Plugin Dependencies
+
+Read `src-tauri/Cargo.toml`, then use the Edit tool to add the following entries to the `[dependencies]` section if they are not already present:
+
+```toml
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-opener = "2"
+```
+
+### Step 8: Register Plugins in `main.rs`
+
+Read `src-tauri/src/main.rs`. Locate the builder chain (where `.run(` is called) and add both plugin registrations before `.run(`. Skip any that already exist.
+
+Before:
+```rust
+tauri::Builder::default()
+    // ...existing plugins...
+    .run(tauri::generate_context!())
+```
+
+After:
+```rust
+tauri::Builder::default()
+    // ...existing plugins...
+    .plugin(tauri_plugin_clipboard_manager::init())
+    .plugin(tauri_plugin_opener::init())
+    .run(tauri::generate_context!())
+```
+
+### Step 9: Add Clipboard Permissions
 
 Read the capabilities file at `src-tauri/capabilities/default.json` (try `defaults.json` if `default.json` does not exist). Locate the `permissions` array and add the following entries if they are not already present:
 
@@ -97,7 +127,7 @@ Read the capabilities file at `src-tauri/capabilities/default.json` (try `defaul
 
 Use the Edit tool to insert them. Do not add duplicates.
 
-### Step 8: Ask About Example Page
+### Step 10: Ask About Example Page
 
 Use `AskUserQuestion` to ask:
 
@@ -139,6 +169,15 @@ Options:
    </main>
    ```
 
+3. Add an entry link to the home page (`src/routes/+page.svelte`):
+   - Read `src/routes/+page.svelte` to understand its structure.
+   - Look for a navigation list, menu section, or feature grid in the `<header>` or near the top of `<main>` — add the link there.
+   - If no obvious entry point exists, append a clearly placed link button at the top of the page body.
+   - Example link element:
+     ```svelte
+     <a href="/markdown-example" class="btn btn-ghost btn-sm">Markdown Example</a>
+     ```
+
 **If No:**
 
 Print the following usage instructions:
@@ -157,7 +196,7 @@ import { renderMarkdown, markdownInteractions } from "$lib/utils/markdown";
 > `markdownInteractions` is a Svelte action that handles copy-button clicks on code blocks and opens external links in the system browser.
 > Wrap rendered content in `class="markdown-content"` to apply the bundled styles.
 
-### Step 9: Verify and Fix
+### Step 11: Verify and Fix
 
 Run the following commands in order. Fix any errors before proceeding to the next.
 
@@ -177,9 +216,9 @@ npm run tauri dev
 - If it succeeds, proceed to the next.
 - If it fails, read the error output, fix the issue, and re-run until it passes.
 
-**When all three succeed**, proceed to Step 10.
+**When all three succeed**, proceed to Step 12.
 
-### Step 10: Summary
+### Step 12: Summary
 
 Inform the user that Markdown rendering has been configured successfully, covering:
 

@@ -15,7 +15,7 @@ A toolkit for Tauri v2 + Svelte 5 desktop application development. Covers the fu
 |---|---|---|
 | **Bootstrap** | "新建项目", "初始化", "create project", "bootstrap" | [references/bootstrap.md](references/bootstrap.md) |
 | **Icon** | "换图标", "replace icon", "app icon" | [references/icon.md](references/icon.md) |
-| **Tray** | "托盘", "tray", "system tray" | [references/tray.md](references/tray.md) |
+| **Tray** | "托盘", "菜单栏图标", "tray", "system tray", "menu bar", "menubar", "menu bar icon", "status bar icon" | [references/tray.md](references/tray.md) |
 | **Updater** | "自动更新", "updater", "auto update", "升级配置" | [references/updater.md](references/updater.md) |
 | **Markdown** | "markdown 渲染", "render markdown", "md preview" | [references/markdown.md](references/markdown.md) |
 
@@ -23,7 +23,7 @@ A toolkit for Tauri v2 + Svelte 5 desktop application development. Covers the fu
 
 - User wants to **create a new** Tauri + Svelte desktop app → Bootstrap
 - User wants to **replace the app icon** → Icon
-- User wants to **add or configure system tray** → Tray
+- User wants to **add or configure system tray / menu bar icon / menubar icon** → Tray
 - User wants to **configure the auto-updater** → Updater
 - User wants to **render Markdown content** in the app → Markdown
 

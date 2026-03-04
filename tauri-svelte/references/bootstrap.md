@@ -25,7 +25,7 @@ The skill directory is at `SKILL_DIR` (the directory containing SKILL.md).
 Extract the template zip directly into the current working directory (the zip contains files at root level, no nested folder):
 
 ```bash
-unzip -o SKILL_DIR/assets/template.zip -d .
+unzip -o SKILL_DIR/assets/template.zip -d . -x "__MACOSX/*" "*.DS_Store"
 ```
 
 ### Step 3: Replace Placeholders with Edit Tool
@@ -58,6 +58,22 @@ npm run tauri dev
 **For each command**:
 - If it succeeds, proceed to the next
 - If it fails, read the error, fix the issue, and re-run until it passes
+
+**When running `npm run tauri dev`**:
+- Run it in the background and monitor the log output
+- **Timeout: wait at most 120 seconds** for a success or error signal — do not loop indefinitely
+- The app launches successfully when the log contains `ready in` or `Local: http://localhost:5173`
+- If an obvious error appears in the log (e.g., `error[E`, `FAILED`, `cannot find`) before the timeout, stop early and fix it
+- After the timeout, check whether the process is still alive:
+  ```bash
+  lsof -ti tcp:5173
+  ```
+  - If the port is occupied → assume the app started successfully and proceed
+  - If the port is not occupied → the process likely crashed; read the log tail for errors and fix them
+- When you need to stop the process, kill both the Tauri process **and** the Vite dev server on port 5173:
+  ```bash
+  kill $(lsof -ti tcp:5173) 2>/dev/null; pkill -f "tauri dev" 2>/dev/null
+  ```
 
 **When all three succeed**, proceed to Step 5.
 

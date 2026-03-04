@@ -1,6 +1,6 @@
-# Tray: System Tray Configuration
+# Tray: System Tray / Menu Bar Icon Configuration
 
-Add a system tray icon with menu to an existing Tauri v2 + Svelte 5 project.
+Add a system tray icon (also known as menu bar icon, menubar icon, or status bar icon) with a context menu to an existing Tauri v2 + Svelte 5 project.
 
 ## Workflow
 
@@ -25,21 +25,21 @@ Options:
     Inform the user the placeholder was copied, and continue to Step 2.
 - If **Skip**: copy the placeholder icon the same way, then continue.
 
-### Step 2: Add `tray-icon` Feature to Cargo.toml
+### Step 2: Update `Cargo.toml` Dependencies
 
-Read `src-tauri/Cargo.toml` and locate the `tauri` dependency line. Add `"tray-icon"` to its `features` list.
+Read `src-tauri/Cargo.toml` and make the following two changes with the Edit tool:
 
-Before (example):
-```toml
-tauri = { version = "2", features = ["..."] }
-```
+**2a. Add `"tray-icon"` to the `tauri` features list** (do not duplicate existing entries):
 
-After (add `tray-icon` to the existing features, do not duplicate existing entries):
 ```toml
 tauri = { version = "2", features = ["...", "tray-icon"] }
 ```
 
-Use the **Edit tool** to make this change.
+**2b. Add the `image` crate** to the `[dependencies]` section:
+
+```toml
+image = "0.25"
+```
 
 ### Step 3: Copy Tray Template to Source
 

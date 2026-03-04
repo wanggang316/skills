@@ -40,7 +40,7 @@ Instruct the user to restart the application for the new icon to take effect:
 npm run tauri dev
 ```
 
-> On macOS, the Dock may cache the old icon. If the icon does not update immediately, run `killall Dock` in the terminal or restart the system.
+> On macOS, the Dock may cache the old icon. If the icon does not update immediately, delete the `src-tauri/target` folder and re-run `npm run tauri dev`.
 
 ### Step 4: Summary
 
@@ -65,6 +65,6 @@ Inform the user that the app icon has been updated successfully, covering:
 |-------|----------|
 | `app-icon.png` not found | Ensure the file is in the project root, not a subdirectory |
 | Icon too small or wrong format | Must be exactly 1024×1024 PNG; convert with an image editor if needed |
-| Old icon still shown on macOS | Run `killall Dock` to clear the Dock icon cache |
+| Old icon still shown on macOS | Delete `src-tauri/target` folder and re-run `npm run tauri dev` |
 | Old icon still shown on Windows | Log out and back in, or restart Explorer to clear the icon cache |
 | Command `tauri icon` not recognized | Ensure `@tauri-apps/cli` is installed; run `npm install` first |
