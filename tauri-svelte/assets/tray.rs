@@ -28,12 +28,16 @@ fn load_tray_icon() -> tauri::image::Image<'static> {
 fn build_tray_menu(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
   // Create menu items
   let open_item = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
-  let do_something_item = MenuItem::with_id(app, "do_something", "Do Something...", true, None::<&str>)?;
+  let do_something_item =
+    MenuItem::with_id(app, "do_something", "Do Something...", true, None::<&str>)?;
   let separator = PredefinedMenuItem::separator(app)?;
   let quit_item = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
 
   // Build menu
-  let menu = Menu::with_items(app, &[&open_item, &do_something_item, &separator, &quit_item])?;
+  let menu = Menu::with_items(
+    app,
+    &[&open_item, &do_something_item, &separator, &quit_item],
+  )?;
 
   // Load tray icon
   let tray_icon = load_tray_icon();
@@ -47,14 +51,14 @@ fn build_tray_menu(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
     .on_menu_event(|app, event| match event.id.as_ref() {
       "quit" => {
         app.exit(0);
-      }
+      },
       "open" => {
         show_main_window(app);
-      }
+      },
       "do_something" => {
-        log::info!("do_something clicked");
-      }
-      _ => {}
+        tracing::info!("do_something clicked");
+      },
+      _ => {},
     })
     .on_tray_icon_event(|tray, event| {
       if let TrayIconEvent::Click {
