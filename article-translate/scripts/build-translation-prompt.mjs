@@ -8,7 +8,6 @@ import {
   readJson,
   splitMarkdownIntoChunks,
   stripFrontmatter,
-  writeJson,
 } from './lib/workflow-utils.mjs';
 
 function usage() {
@@ -211,23 +210,8 @@ async function main() {
     markdown: content,
   });
 
-  const profile = {
-    pipeline: ['prepare', 'fetch', 'sanitize', 'analyze', 'translate', 'critique', 'revise', 'apply'],
-    lang,
-    topic,
-    audience,
-    style,
-    chunkCount: chunks.length,
-    chunkWordCounts: chunks.map((chunk) => chunk.wordCount),
-    glossaryCount: glossary.length,
-    generatedAt: new Date().toISOString(),
-  };
-
   await fs.writeFile(articleFile(articleDir, '01-analysis.md'), analysis, 'utf8');
-  await writeJson(articleFile(articleDir, 'glossary.json'), glossary);
-  await writeJson(articleFile(articleDir, 'translation.profile.json'), profile);
-  await fs.writeFile(articleFile(articleDir, '02-prompt.md'), prompt, 'utf8');
-  await fs.writeFile(articleFile(articleDir, `translate.${lang}.prompt.txt`), prompt, 'utf8');
+  await fs.writeFile(articleFile(articleDir, `02-translate.${lang}.prompt.txt`), prompt, 'utf8');
 
   console.log(
     JSON.stringify(
@@ -235,10 +219,7 @@ async function main() {
         ok: true,
         articleDir,
         analysisPath: articleFile(articleDir, '01-analysis.md'),
-        glossaryPath: articleFile(articleDir, 'glossary.json'),
-        profilePath: articleFile(articleDir, 'translation.profile.json'),
-        promptPath: articleFile(articleDir, '02-prompt.md'),
-        promptCompatPath: articleFile(articleDir, `translate.${lang}.prompt.txt`),
+        promptPath: articleFile(articleDir, `02-translate.${lang}.prompt.txt`),
         chunkCount: chunks.length,
         topic,
         audience,

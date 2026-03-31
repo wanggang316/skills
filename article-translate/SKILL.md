@@ -76,9 +76,9 @@ Do not translate directly from `source.md`.
 
 If the user already has an article directory with `source.clean.md`, resume here instead of fetching again.
 
-### 4. Translate And Review
+### 4. Translate
 
-Read `translate.<lang>.prompt.txt`, translate the article, and review the draft yourself before applying it.
+Read `02-translate.<lang>.prompt.txt` and write a first complete draft of the translation.
 
 The draft must:
 
@@ -88,7 +88,23 @@ The draft must:
 - keep code blocks, commands, URLs, and file paths unchanged
 - preserve generated placeholders unchanged when they appear
 
-Review the draft for:
+Write this draft to `03-draft.md`.
+
+### 5. Critique Draft
+
+Generate critique notes for `03-draft.md`:
+
+```bash
+node article-translate/scripts/stage-draft.mjs --article-dir "<article-dir>" --lang zh
+```
+
+This writes:
+
+- `04-critique.md`
+
+The script writes the deterministic checks. Then the Agent must read the source and the draft, and complete the `## Agent Critique` section inside `04-critique.md`.
+
+The critique should cover:
 
 - terminology consistency
 - title quality
@@ -96,30 +112,45 @@ Review the draft for:
 - missing or distorted meaning
 - Markdown integrity
 
-### 5. Apply
+### 6. Revise And Repeat
+
+Read `04-critique.md` and decide based on its contents:
+
+- If there are no real problems left, continue to `Apply Final`.
+- If there are problems, revise `03-draft.md` and run `Critique Draft` again.
+
+Do not regenerate the draft from scratch, and do not publish until the critique issues are resolved.
+
+### 7. Apply Final
 
 Write the final translation:
 
 ```bash
-node article-translate/scripts/apply-translation.mjs --article-dir "<article-dir>" --lang zh --in /path/to/translated.md
+node article-translate/scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh --in /path/to/translated.final.md
 ```
 
-This writes the final `<lang>.md`.
+This writes:
+
+- `05-revision.md`
+- `06-quality-report.json`
+- final `<lang>.md`
 
 ## Output
 
-Each article directory should contain:
+Each article directory should contain these source files:
 
 - `source.md`
 - `meta.json`
 - `source.clean.md`
-- `glossary.json`
+
+And these workflow files:
+
 - `01-analysis.md`
-- `02-prompt.md`
+- `02-translate.<lang>.prompt.txt`
 - `03-draft.md`
 - `04-critique.md`
 - `05-revision.md`
-- `quality-report.json`
+- `06-quality-report.json`
 - `<lang>.md`
 
 ## Failure Handling
@@ -136,11 +167,11 @@ If fetch fails:
 - confirm `articrab` works in the shell
 - confirm the Jina token is valid
 
-If apply fails:
+If draft staging or final apply fails:
 
 - check that the draft still contains every required placeholder
 - check that the draft still starts with a Markdown H1
-- fix the draft and rerun apply
+- fix the draft and rerun the appropriate stage
 
 Do not skip failed stages. Resume from the last valid file.
 
@@ -166,10 +197,11 @@ Behavior: run the full workflow from prepare to final `zh.md`.
 
 Input: `把这篇博客翻成中文，不要只在对话里给我一段翻译，我要文件：https://martinfowler.com/articles/agentic-ai.html`
 
-Behavior: fetch the article, build prompt files, translate, review, and write the final files.
+Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then publish the final files.
+Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then apply the final files.
 
 **Example 3**
 
 Input: `这篇文章已经抓好了，继续做中文翻译：/path/to/article-dir`
 
-Behavior: resume from the existing article directory, skip fetch, and continue with analysis, translation, review, and apply.
+Behavior: resume from the existing article directory, skip fetch, and continue with analysis, draft, critique, revision, and final apply.
