@@ -6,7 +6,7 @@ import { restoreSVGs } from './lib/svg-placeholder.mjs';
 import { splitTitleAndBody, buildChecks, buildRevisionNotes, countWarnings, loadPreviousDraft } from './lib/translation-checks.mjs';
 
 function usage() {
-  console.log('Usage: node article-translate/scripts/apply-final.mjs --article-dir "<article-dir>" [--lang zh] [--in /path/to/translated.md]');
+  console.log('Usage: node article-translate/scripts/apply-final.mjs --article-dir "<article-dir>" [--lang zh] [--in /path/to/translated.md] [--path-only]');
 }
 
 function argValue(args, key, fallback = null) {
@@ -50,6 +50,7 @@ async function main() {
   const articleDir = argValue(args, '--article-dir');
   const lang = argValue(args, '--lang', 'zh');
   const inputPath = argValue(args, '--in', articleFile(articleDir || '.', '03-draft.md'));
+  const pathOnly = args.includes('--path-only');
   if (!articleDir) throw new Error('Missing --article-dir');
 
   const sourceRaw = await fs.readFile(articleFile(articleDir, 'source.clean.md'), 'utf8');
@@ -113,6 +114,11 @@ async function main() {
     output: translatedPath,
     generatedAt: new Date().toISOString(),
   });
+
+  if (pathOnly) {
+    console.log(translatedPath);
+    return;
+  }
 
   console.log(
     JSON.stringify(

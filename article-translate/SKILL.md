@@ -130,7 +130,7 @@ Do not run `Apply Final` while `04-critique.md` still contains any `pending agen
 After critique issues are resolved, apply the revised `03-draft.md` as the final translation:
 
 ```bash
-node SKILL_DIR/scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh
+node SKILL_DIR/scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh --path-only
 ```
 
 This writes:
@@ -138,6 +138,10 @@ This writes:
 - `05-revision.md`
 - `06-quality-report.json`
 - final `<lang>.md`
+
+After `Apply Final` succeeds, respond with the absolute path of the translated file only.
+Do not add status text, bullets, summaries, explanations, or any other surrounding text.
+Do not describe the generated files.
 
 ## Output
 
@@ -196,18 +200,14 @@ Always:
 
 **Example 1**
 
-Input: `翻译一下这个链接：https://openai.com/index/harness-engineering/`
+Input: `翻译 https://openai.com/index/harness-engineering/`
 
 Behavior: run the full workflow from prepare to final `zh.md`.
+Final response: output only the absolute path to `zh.md`.
 
 **Example 2**
 
-Input: `把这篇博客翻成中文，不要只在对话里给我一段翻译，我要文件：https://martinfowler.com/articles/agentic-ai.html`
+Input: `把这篇文章翻成中文：https://martinfowler.com/articles/agentic-ai.html`
 
 Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then apply the final files.
-
-**Example 3**
-
-Input: `这篇文章已经抓好了，继续做中文翻译：/path/to/article-dir`
-
-Behavior: resume from the existing article directory, skip fetch, and continue with analysis, draft, critique, revision, and final apply.
+Final response: output only the absolute path to the translated file.

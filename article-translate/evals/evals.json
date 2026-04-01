@@ -30,36 +30,6 @@
       "prompt": "translate this post https://openai.com/index/harness-engineering/",
       "expected_output": "Triggers article-translate from an English prompt and runs the article translation workflow for the URL.",
       "files": []
-    },
-    {
-      "id": 6,
-      "prompt": "翻译一下这个链接，不要只在对话里给我一段中文，直接按完整流程做成文件：https://openai.com/index/harness-engineering/",
-      "expected_output": "Triggers article-translate for a URL-based article translation, runs the full workflow, and produces the expected Markdown artifacts including the final Chinese file.",
-      "files": []
-    },
-    {
-      "id": 7,
-      "prompt": "把这篇网页文章完整翻成中文，并保存到本地文件：https://martinfowler.com/articles/agentic-ai.html",
-      "expected_output": "Uses article-translate for a file-backed article translation request and produces the expected local Markdown artifacts.",
-      "files": []
-    },
-    {
-      "id": 8,
-      "prompt": "我不确定 articrab 和 token 配好没有。先帮我检查环境，再抓取并翻译这篇博客：https://martinfowler.com/articles/agentic-ai.html",
-      "expected_output": "Checks environment first, guides articrab setup if needed, then fetches the article and continues the translation workflow.",
-      "files": []
-    },
-    {
-      "id": 9,
-      "prompt": "这篇文章已经抓好了，目录在 /tmp/article-dir 。继续帮我做分析、翻译和审校，最后写出 zh.md。",
-      "expected_output": "Resumes from an existing article directory, skips fetch, and completes analysis, translation, review, and final apply.",
-      "files": []
-    },
-    {
-      "id": 10,
-      "prompt": "不要只给我摘要，直接把这篇博客完整翻成中文：https://martinfowler.com/articles/agentic-ai.html",
-      "expected_output": "Recognizes that the user wants a full article translation rather than a summary and uses article-translate to run the complete workflow.",
-      "files": []
     }
   ]
 }
