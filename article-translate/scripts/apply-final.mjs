@@ -75,9 +75,10 @@ async function main() {
   const restoredBody = restoreSVGs(body, placeholders);
   const finalMarkdown = buildTranslatedMarkdown({
     title,
+    originalTitle: sourceFrontmatter.originalTitle || sourceFrontmatter.title,
     body: restoredBody,
     lang,
-    sourceUrl: sourceFrontmatter.sourceUrl,
+    originalUrl: sourceFrontmatter.originalUrl || sourceFrontmatter.sourceUrl,
     date: sourceFrontmatter.date,
   });
 

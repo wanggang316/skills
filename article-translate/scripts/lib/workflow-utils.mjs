@@ -134,13 +134,15 @@ export function articleFile(dir, name) {
   return path.join(path.resolve(dir), name);
 }
 
-export function buildTranslatedMarkdown({ title, body, lang, sourceUrl, date }) {
+export function buildTranslatedMarkdown({ title, originalTitle, body, lang, originalUrl, date }) {
   const safeTitle = String(title || '').replace(/"/g, '\\"');
+  const safeOriginalTitle = String(originalTitle || '').replace(/"/g, '\\"');
   const frontmatterLines = [
     '---',
     `title: "${safeTitle}"`,
+    originalTitle ? `originalTitle: "${safeOriginalTitle}"` : null,
     date ? `date: ${date}` : null,
-    sourceUrl ? `sourceUrl: ${sourceUrl}` : null,
+    originalUrl ? `originalUrl: ${originalUrl}` : null,
     lang ? `lang: ${lang}` : null,
     '---',
   ].filter(Boolean);
