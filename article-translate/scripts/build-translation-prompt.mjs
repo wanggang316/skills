@@ -53,15 +53,31 @@ function deriveStyle(topic) {
 function extractGlossary(markdown) {
   const source = String(markdown || '');
   const set = new Set();
+  const repeatedTitleCase = new Map();
+  const stopwords = new Set([
+    'A', 'An', 'And', 'As', 'At', 'Because', 'But', 'By', 'Even', 'Five', 'For',
+    'From', 'In', 'Increasing', 'Into', 'It', 'Its', 'Of', 'On', 'Or', 'Over',
+    'That', 'The', 'There', 'This', 'Throughout', 'To', 'What', 'When', 'With',
+  ]);
 
   for (const match of source.matchAll(/`([^`\n]+)`/g)) {
     const term = match[1].trim();
     if (term) set.add(term);
   }
 
-  for (const match of source.matchAll(/\b[A-Z][A-Za-z0-9_-]{1,}\b/g)) {
+  for (const match of source.matchAll(/\b(?:[A-Z]{2,}[A-Z0-9_-]*|[A-Z][a-z0-9]+(?:[A-Z][A-Za-z0-9_-]+)+)\b/g)) {
     const term = match[0].trim();
-    if (term.length >= 3) set.add(term);
+    if (term.length >= 2) set.add(term);
+  }
+
+  for (const match of source.matchAll(/\b[A-Z][a-z][A-Za-z0-9_-]*\b/g)) {
+    const term = match[0].trim();
+    if (term.length < 3 || stopwords.has(term)) continue;
+    repeatedTitleCase.set(term, (repeatedTitleCase.get(term) || 0) + 1);
+  }
+
+  for (const [term, count] of repeatedTitleCase.entries()) {
+    if (count >= 2) set.add(term);
   }
 
   return [...set].slice(0, 40).map((term) => ({
@@ -134,7 +150,7 @@ function renderPrompt({ title, sourceUrl, lang, topic, audience, style, glossary
     '- 保留 Markdown 结构，包括标题、列表、引用、表格和链接。',
     '- 代码块、命令、URL、文件路径、环境变量、API 名称保持原样。',
     '- 任何形如 @@FIGURE_SVG_001@@ 的占位符必须原样保留，不得改写、删除或移动。',
-    '- 必须翻译标题：最终结果第一行是一个 H1 标题，以 "# " 开头。',
+    '- 必须翻译标题：最终结果第一行是一个 H1 标题，以 "# " 开头，不得直接复用英文原题。',
     '- 第一行标题后空一行，再输出正文。',
     '- 只输出最终修订后的译文，不要输出分析过程，不要加解释。',
     '',

@@ -1,6 +1,6 @@
 ---
 name: article-translate
-description: "Translate web articles, blog posts, essays, and technical posts from a URL into polished Chinese Markdown files. Use this skill whenever the user asks things like '翻译这篇文章', '翻译一下这个链接', '把这个网页翻成中文', 'translate this post', or wants a serious article translation saved as files."
+description: "Translate web articles, blog posts, essays, and technical posts from a URL into Chinese Markdown files. Use this skill whenever the user asks things like '翻译这篇文章', '翻译一下这个链接', '把这个网页翻成中文', 'translate this post', or asks to continue translating an existing article directory."
 ---
 
 # Article Translate
@@ -13,8 +13,8 @@ Use this skill when the user wants to:
 
 - translate an article from a URL
 - translate a blog post, essay, or technical post into Chinese
-- save the translation as local files
-- fetch an article first and then translate it
+- fetch an article and translate it
+- continue translating an existing article directory
 
 Do not use this skill for:
 
@@ -29,7 +29,7 @@ Do not use this skill for:
 Check the local environment first:
 
 ```bash
-node article-translate/scripts/prepare-workspace.mjs
+node scripts/prepare-workspace.mjs
 ```
 
 If `articrab` is missing, guide the user to run:
@@ -59,7 +59,7 @@ Do not assume token setup is correct until fetching succeeds.
 If the user provided a URL, fetch the article:
 
 ```bash
-node article-translate/scripts/fetch-article.mjs "<url>" --out "<workspace-root>"
+node scripts/fetch-article.mjs "<url>" --out "<workspace-root>"
 ```
 
 This creates an article directory and writes the source files needed for translation.
@@ -69,7 +69,7 @@ This creates an article directory and writes the source files needed for transla
 Build the analysis and translation prompt:
 
 ```bash
-node article-translate/scripts/build-translation-prompt.mjs --article-dir "<article-dir>" --lang zh
+node scripts/build-translation-prompt.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 Do not translate directly from `source.md`.
@@ -95,7 +95,7 @@ Write this draft to `03-draft.md`.
 Generate critique notes for `03-draft.md`:
 
 ```bash
-node article-translate/scripts/stage-draft.mjs --article-dir "<article-dir>" --lang zh
+node scripts/stage-draft.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 This writes:
@@ -103,6 +103,7 @@ This writes:
 - `04-critique.md`
 
 The script writes the deterministic checks. Then the Agent must read the source and the draft, and complete the `## Agent Critique` section inside `04-critique.md`.
+Replace every `pending agent review` line with a concrete review result, then set `review-decision` to `revise` or `pass`.
 
 The critique should cover:
 
@@ -116,17 +117,18 @@ The critique should cover:
 
 Read `04-critique.md` and decide based on its contents:
 
-- If there are no real problems left, continue to `Apply Final`.
+- If `review-decision: pass`, continue to `Apply Final`.
 - If there are problems, revise `03-draft.md` and run `Critique Draft` again.
 
 Do not regenerate the draft from scratch, and do not publish until the critique issues are resolved.
+Do not run `Apply Final` while `04-critique.md` still contains any `pending agent review` placeholder.
 
 ### 7. Apply Final
 
-Write the final translation:
+After critique issues are resolved, apply the revised `03-draft.md` as the final translation:
 
 ```bash
-node article-translate/scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh --in /path/to/translated.final.md
+node scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 This writes:
@@ -159,7 +161,7 @@ If environment setup fails:
 
 - install `articrab`
 - configure the Jina token
-- rerun `prepare-workspace.mjs`
+- rerun `scripts/prepare-workspace.mjs`
 
 If fetch fails:
 
@@ -171,6 +173,8 @@ If draft staging or final apply fails:
 
 - check that the draft still contains every required placeholder
 - check that the draft still starts with a Markdown H1
+- check that `04-critique.md` no longer contains `pending agent review`
+- check that `04-critique.md` ends with `review-decision: pass`
 - fix the draft and rerun the appropriate stage
 
 Do not skip failed stages. Resume from the last valid file.
@@ -183,6 +187,7 @@ Always:
 - preserve Markdown headings, lists, quotes, tables, and links
 - keep code blocks, commands, URLs, file paths, and API names unchanged
 - keep generated placeholders unchanged when they appear
+- translate the title instead of copying the English title unchanged
 - write critique and revision notes before applying the final file
 
 ## Examples
@@ -197,7 +202,6 @@ Behavior: run the full workflow from prepare to final `zh.md`.
 
 Input: `把这篇博客翻成中文，不要只在对话里给我一段翻译，我要文件：https://martinfowler.com/articles/agentic-ai.html`
 
-Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then publish the final files.
 Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then apply the final files.
 
 **Example 3**

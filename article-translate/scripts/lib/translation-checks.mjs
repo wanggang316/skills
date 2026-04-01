@@ -24,6 +24,20 @@ export function countMatches(text, pattern) {
   return matches ? matches.length : 0;
 }
 
+function tryReadTitle(markdown) {
+  try {
+    return splitTitleAndBody(markdown).title;
+  } catch {
+    return '';
+  }
+}
+
+function normalizeTitle(title) {
+  return String(title || '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '');
+}
+
 export function collectProtectedTerms(sourceMarkdown, glossary = []) {
   const source = String(sourceMarkdown || '');
   const keepVerbatim = new Set();
@@ -68,6 +82,17 @@ export function evaluateTerminology(sourceMarkdown, translatedMarkdown, glossary
     : `WARN missing ${missing.length}/${protectedTerms.length} protected terms: ${missing.slice(0, 5).join(', ')}`;
 }
 
+export function evaluateTitleTranslation(sourceMarkdown, translatedMarkdown, sourceTitleHint = '') {
+  const sourceTitle = String(sourceTitleHint || '').trim() || tryReadTitle(sourceMarkdown);
+  const translatedTitle = tryReadTitle(translatedMarkdown);
+  if (!translatedTitle) return 'WARN missing translated title';
+  if (!sourceTitle) return 'CHECK source title manually';
+
+  return normalizeTitle(sourceTitle) === normalizeTitle(translatedTitle)
+    ? 'WARN title matches source title exactly'
+    : 'PASS';
+}
+
 export function evaluateReadability(translatedMarkdown) {
   const text = String(translatedMarkdown || '');
   const cjkCount = countMatches(text, /[\u3400-\u9FFF]/g);
@@ -86,11 +111,12 @@ export function evaluateReadability(translatedMarkdown) {
     : `WARN ${issues.join(', ')}`;
 }
 
-export function buildChecks(sourceMarkdown, translatedMarkdown, sanitizeReport = {}, glossary = []) {
+export function buildChecks(sourceMarkdown, translatedMarkdown, sanitizeReport = {}, glossary = [], sourceTitleHint = '') {
   const sourceFences = collectCodeFenceInfos(sourceMarkdown);
   const translatedFences = collectCodeFenceInfos(translatedMarkdown);
   return {
     titlePresent: 'PASS',
+    titleTranslation: evaluateTitleTranslation(sourceMarkdown, translatedMarkdown, sourceTitleHint),
     svgPlaceholders: sanitizeReport.svgPlaceholders > 0 ? 'CHECKED' : 'NONE',
     codeFenceCount: sourceFences.length === translatedFences.length ? 'PASS' : `WARN source=${sourceFences.length} translated=${translatedFences.length}`,
     placeholderLoss: /@@FIGURE_SVG_\d{3}@@/.test(translatedMarkdown) || sanitizeReport.svgPlaceholders === 0 ? 'PASS' : 'WARN',
@@ -111,6 +137,7 @@ export function buildCritique(checks) {
   critique.push('## Deterministic Checks');
   critique.push('');
   critique.push(`- title-present: ${checks.titlePresent}`);
+  critique.push(`- title-translation: ${checks.titleTranslation}`);
   critique.push(`- svg-placeholders: ${checks.svgPlaceholders}`);
   critique.push(`- code-fence-count: ${checks.codeFenceCount}`);
   critique.push(`- placeholder-loss: ${checks.placeholderLoss}`);
@@ -120,7 +147,8 @@ export function buildCritique(checks) {
   critique.push('');
   critique.push('## Agent Critique');
   critique.push('');
-  critique.push('Compare the source and the draft, then fill in this section before revising the translation.');
+  critique.push('Compare the source and the draft, then fill in every item below before revising the translation.');
+  critique.push('Do not leave any line below as "pending agent review".');
   critique.push('');
   critique.push('- fidelity-review: pending agent review');
   critique.push('- terminology-review: pending agent review');
@@ -128,7 +156,9 @@ export function buildCritique(checks) {
   critique.push('- fluency-review: pending agent review');
   critique.push('- missing-or-distorted-meaning: pending agent review');
   critique.push('- revision-plan: pending agent review');
+  critique.push('- review-decision: pending agent review');
   critique.push('');
+  critique.push('Set `review-decision` to `revise` or `pass` after completing the review.');
   critique.push('Revise the translation and run the draft stage again if any item above still needs work.');
   critique.push('');
   return critique.join('\n');
@@ -153,6 +183,7 @@ export function buildRevisionNotes({ title, checks, placeholderCount, translated
     `- changed-since-draft: ${previousDraftExists ? (changedSinceDraft ? 'yes' : 'no') : 'n/a'}`,
     `- restored-svg-placeholders: ${placeholderCount > 0 ? `yes (${placeholderCount})` : 'none'}`,
     `- verified-title-contract: ${checks.titlePresent}`,
+    `- title-translation-check: ${checks.titleTranslation}`,
     `- code-fence-check: ${checks.codeFenceCount}`,
     `- markdown-review: ${checks.markdownReview}`,
     `- terminology-review: ${checks.terminologyReview}`,

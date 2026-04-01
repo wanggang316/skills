@@ -136,15 +136,18 @@ export function articleFile(dir, name) {
 
 export function buildTranslatedMarkdown({ title, body, lang, sourceUrl, date }) {
   const safeTitle = String(title || '').replace(/"/g, '\\"');
-  const frontmatter = [
+  const frontmatterLines = [
     '---',
     `title: "${safeTitle}"`,
     date ? `date: ${date}` : null,
     sourceUrl ? `sourceUrl: ${sourceUrl}` : null,
     lang ? `lang: ${lang}` : null,
     '---',
-    '',
-  ].filter(Boolean).join('\n');
+  ].filter(Boolean);
 
-  return `${frontmatter}${String(body || '').trim()}\n`;
+  const normalizedBody = String(body || '')
+    .replace(/^[\u200B\uFEFF]+/, '')
+    .trim();
+
+  return `${frontmatterLines.join('\n')}\n\n${normalizedBody}\n`;
 }

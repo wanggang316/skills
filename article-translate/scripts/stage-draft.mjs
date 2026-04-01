@@ -46,7 +46,7 @@ async function main() {
   const placeholders = fromPlaceholderList(await readJson(articleFile(articleDir, 'inline-svg.placeholders.json'), []));
   const draftPath = articleFile(articleDir, '03-draft.md');
   const translationRaw = await readInput(inputPath, draftPath);
-  const { content: sourceMarkdown } = stripFrontmatter(sourceRaw);
+  const { data: sourceFrontmatter, content: sourceMarkdown } = stripFrontmatter(sourceRaw);
   const { body } = splitTitleAndBody(translationRaw);
 
   const requiredPlaceholderIds = Object.keys(placeholders);
@@ -55,7 +55,7 @@ async function main() {
     throw new Error(`Missing SVG placeholders in translation: ${missing.slice(0, 5).join(', ')}`);
   }
 
-  const checks = buildChecks(sourceMarkdown, translationRaw, sanitizeReport, []);
+  const checks = buildChecks(sourceMarkdown, translationRaw, sanitizeReport, [], sourceFrontmatter.title || '');
   const critique = buildCritique(checks);
   const critiquePath = articleFile(articleDir, '04-critique.md');
 
@@ -72,7 +72,8 @@ async function main() {
         critiquePath,
         checks,
         warningCount: countWarnings(checks),
-        readyForFinal: countWarnings(checks) === 0,
+        readyForFinal: false,
+        pendingAgentCritique: true,
       },
       null,
       2
