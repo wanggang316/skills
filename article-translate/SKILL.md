@@ -1,6 +1,6 @@
 ---
 name: article-translate
-description: "Translate web articles, blog posts, essays, and technical posts from a URL into Chinese Markdown files. Use this skill whenever the user asks things like '翻译这篇文章', '翻译一下这个链接', '把这个网页翻成中文', 'translate this post', or asks to continue translating an existing article directory."
+description: "Translate web articles, blog posts, essays, and technical posts from a URL into Chinese Markdown files. Use this skill only when the user explicitly asks to translate, with requests like '翻译这篇文章', '翻译一下这个链接', '把这个网页翻成中文', 'translate this post', or asks to continue translating an existing article directory. Do not trigger this skill for a bare URL alone without translation intent."
 ---
 
 # Article Translate
@@ -11,13 +11,15 @@ Translate a high-quality article from a URL into polished Chinese Markdown files
 
 Use this skill when the user wants to:
 
-- translate an article from a URL
+- translate an article from a URL with explicit translation intent
 - translate a blog post, essay, or technical post into Chinese
 - fetch an article and translate it
 - continue translating an existing article directory
 
 Do not use this skill for:
 
+- a bare URL without words that mean translate, such as `翻译`, `翻成中文`, or `translate`
+- requests to open, read, summarize, explain, or analyze a URL without asking for translation
 - translating a short paragraph directly in chat
 - explaining a single sentence or phrase
 - non-article writing tasks
@@ -211,3 +213,9 @@ Input: `把这篇文章翻成中文：https://martinfowler.com/articles/agentic-
 
 Behavior: fetch the article, build the translation prompt file, write a draft, critique it, revise it as needed, and then apply the final files.
 Final response: output only the absolute path to the translated file.
+
+**Example 3**
+
+Input: `https://openai.com/index/harness-engineering/`
+
+Behavior: do not use this skill, because a bare URL alone does not express translation intent.
