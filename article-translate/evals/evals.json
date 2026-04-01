@@ -1,0 +1,35 @@
+{
+  "skill_name": "article-translate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "翻译 https://openai.com/index/harness-engineering/",
+      "expected_output": "Triggers article-translate from a minimal URL-only translation request and runs the full article translation workflow.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "翻译一下 https://openai.com/index/harness-engineering/",
+      "expected_output": "Triggers article-translate from a minimal colloquial request and starts the full workflow for the given article URL.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把这个链接翻成中文：https://openai.com/index/harness-engineering/",
+      "expected_output": "Recognizes a URL-based article translation request and uses article-translate to fetch, analyze, translate, and write files.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "翻译这篇文章：https://openai.com/index/harness-engineering/",
+      "expected_output": "Triggers article-translate from a direct article translation request and runs the expected end-to-end workflow.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "translate this post https://openai.com/index/harness-engineering/",
+      "expected_output": "Triggers article-translate from an English prompt and runs the article translation workflow for the URL.",
+      "files": []
+    }
+  ]
+}

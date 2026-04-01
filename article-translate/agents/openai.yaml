@@ -1,0 +1,4 @@
+interface:
+  display_name: "Article Translate"
+  short_description: "Translate article URLs into polished Chinese Markdown"
+  default_prompt: "Use $article-translate to turn this article URL into polished Chinese Markdown files."
