@@ -14,7 +14,7 @@ Or browse and install via [youskill.cc](https://youskill.cc).
 
 | Skill | Description |
 |---|---|
-| [article-translate](article-translate/SKILL.md) | Prepare, fetch, sanitize, and translate articles from URLs with articrab |
+| [article-translate](article-translate/SKILL.md) | High-quality article translation workflow: prepare, fetch with articrab, draft, critique, revise, and write final Chinese Markdown |
 | [tauri-svelte](tauri-svelte/README.md) | Best practices for building Tauri v2 + Svelte 5 desktop apps |
 
 ## License

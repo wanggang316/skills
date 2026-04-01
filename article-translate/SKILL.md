@@ -24,12 +24,14 @@ Do not use this skill for:
 
 ## Workflow
 
+The skill directory is at `SKILL_DIR` (the directory containing `SKILL.md`).
+
 ### 1. Prepare
 
 Check the local environment first:
 
 ```bash
-node scripts/prepare-workspace.mjs
+node SKILL_DIR/scripts/prepare-workspace.mjs
 ```
 
 If `articrab` is missing, guide the user to run:
@@ -59,7 +61,7 @@ Do not assume token setup is correct until fetching succeeds.
 If the user provided a URL, fetch the article:
 
 ```bash
-node scripts/fetch-article.mjs "<url>" --out "<workspace-root>"
+node SKILL_DIR/scripts/fetch-article.mjs "<url>" --out "<workspace-root>"
 ```
 
 This creates an article directory and writes the source files needed for translation.
@@ -69,7 +71,7 @@ This creates an article directory and writes the source files needed for transla
 Build the analysis and translation prompt:
 
 ```bash
-node scripts/build-translation-prompt.mjs --article-dir "<article-dir>" --lang zh
+node SKILL_DIR/scripts/build-translation-prompt.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 Do not translate directly from `source.md`.
@@ -95,7 +97,7 @@ Write this draft to `03-draft.md`.
 Generate critique notes for `03-draft.md`:
 
 ```bash
-node scripts/stage-draft.mjs --article-dir "<article-dir>" --lang zh
+node SKILL_DIR/scripts/stage-draft.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 This writes:
@@ -128,7 +130,7 @@ Do not run `Apply Final` while `04-critique.md` still contains any `pending agen
 After critique issues are resolved, apply the revised `03-draft.md` as the final translation:
 
 ```bash
-node scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh
+node SKILL_DIR/scripts/apply-final.mjs --article-dir "<article-dir>" --lang zh
 ```
 
 This writes:
@@ -161,7 +163,7 @@ If environment setup fails:
 
 - install `articrab`
 - configure the Jina token
-- rerun `scripts/prepare-workspace.mjs`
+- rerun the prepare command above
 
 If fetch fails:
 
